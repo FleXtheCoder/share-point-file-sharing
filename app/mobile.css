@@ -1,0 +1,148 @@
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  flex-shrink: 0;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: none;
+  }
+
+  .app-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.45);
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .drive-toolbar {
+    padding: 0 12px !important;
+  }
+
+  .toolbar-row-main {
+    flex-wrap: wrap;
+    gap: 8px !important;
+    padding: 8px 0 !important;
+  }
+
+  .toolbar-actions {
+    order: 2;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .toolbar-actions .toolbar-btn-label {
+    display: none;
+  }
+
+  .toolbar-search-wrap {
+    order: 3;
+    width: 100%;
+    flex: none !important;
+  }
+
+  .toolbar-search-wrap .fui-Input {
+    width: 100% !important;
+  }
+
+  .toolbar-sort-wrap {
+    display: none !important;
+  }
+
+  .toolbar-view-toggle {
+    margin-left: auto;
+  }
+
+  .toolbar-breadcrumb-row {
+    overflow-x: auto;
+    padding: 6px 0 !important;
+  }
+
+  .file-count-bar {
+    padding: 8px 12px 0 !important;
+  }
+
+  .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  .file-list-table .col-hide-mobile {
+    display: none;
+  }
+
+  .file-list-table col.col-hide-mobile {
+    width: 0 !important;
+  }
+
+  .file-list-table .file-row-actions {
+    opacity: 1 !important;
+  }
+
+  .mobile-admin-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #fff;
+    border-bottom: 1px solid #e1dfdd;
+  }
+
+  .mobile-admin-bar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #323130;
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar-backdrop {
+    display: none !important;
+  }
+}

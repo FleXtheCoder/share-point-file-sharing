@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum ShareRole {
+  READ
+  WRITE
+}
+
+model User {
+  id                 String   @id @default(uuid())
+  username           String   @unique
+  passwordHash       String   @map("password_hash")
+  color              String
+  role               Role     @default(MEMBER)
+  mustChangePassword Boolean  @default(true) @map("must_change_password")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  ownedFiles    File[]      @relation("FileOwner")
+  modifiedFiles File[]      @relation("FileModifier")
+  shares        FileShare[]
+  favorites     Favorite[]
+
+  @@map("users")
+}
+
+model File {
+  id           String    @id @default(uuid())
+  name         String
+  type         String
+  isFolder     Boolean   @default(false) @map("is_folder")
+  size         Int?
+  parentId     String?   @map("parent_id")
+  parent       File?     @relation("FileChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children     File[]    @relation("FileChildren")
+  ownerId      String    @map("owner_id")
+  owner        User      @relation("FileOwner", fields: [ownerId], references: [id])
+  modifiedById String    @map("modified_by")
+  modifiedBy   User      @relation("FileModifier", fields: [modifiedById], references: [id])
+  modifiedAt   DateTime  @default(now()) @map("modified_at")
+  deletedAt    DateTime? @map("deleted_at")
+  storagePath  String?   @map("storage_path")
+  folderColor  String?   @map("folder_color")
+
+  shares    FileShare[]
+  favorites Favorite[]
+
+  @@index([parentId])
+  @@index([ownerId])
+  @@index([deletedAt])
+  @@map("files")
+}
+
+model FileShare {
+  fileId String    @map("file_id")
+  file   File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  userId String    @map("user_id")
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   ShareRole @default(WRITE)
+
+  @@id([fileId, userId])
+  @@map("file_shares")
+}
+
+model Favorite {
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileId String @map("file_id")
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@id([userId, fileId])
+  @@map("favorites")
+}

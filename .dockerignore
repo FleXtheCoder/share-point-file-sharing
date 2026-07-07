@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+.next
+
+# Data
+data/
+
+# Env
+.env
+.env*.local
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# IDE
+.DS_Store
+*.md
