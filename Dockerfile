@@ -23,10 +23,10 @@ RUN addgroup --system --gid 1001 nodejs \
   && mkdir -p /app/data/uploads \
   && chown -R nextjs:nodejs /app/data
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 
@@ -39,8 +39,7 @@ RUN npm install prisma@5.22.0 --no-save --ignore-scripts \
   && test -f /app/node_modules/prisma/build/index.js
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
-  && chown -R nextjs:nodejs /app/node_modules /app/prisma
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 3000
 ENV PORT=3000
