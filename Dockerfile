@@ -20,6 +20,7 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs \
   && apk add --no-cache su-exec \
+  && npm install -g prisma@5.22.0 \
   && mkdir -p /app/data/uploads \
   && chown -R nextjs:nodejs /app/data
 
