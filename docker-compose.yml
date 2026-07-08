@@ -16,27 +16,13 @@ services:
 
   app:
     build: .
-    container_name: app
     restart: unless-stopped
-    # Nur Container-Port (kein Host-Mapping) – EasyPanel bindet die Domain daran
-    ports:
-      - "3000"
-    expose:
-      - "3000"
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sharepoint-app.rule=Host(`${EASYPANEL_DOMAIN:-colorer-sharepoint.u3l6ga.easypanel.host}`)
-      - traefik.http.routers.sharepoint-app.entrypoints=websecure
-      - traefik.http.routers.sharepoint-app.tls=true
-      - traefik.http.routers.sharepoint-app.tls.certresolver=letsencrypt
-      - traefik.http.services.sharepoint-app.loadbalancer.server.port=3000
     environment:
       DATABASE_URL: postgresql://gruppen:gruppen@db:5432/gruppen_drive
       SESSION_SECRET: change-me-in-production
       UPLOADS_DIR: /app/data/uploads
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: admin123
-      EASYPANEL_DOMAIN: ${EASYPANEL_DOMAIN:-colorer-sharepoint.u3l6ga.easypanel.host}
     volumes:
       - uploads_data:/app/data/uploads
     depends_on:
